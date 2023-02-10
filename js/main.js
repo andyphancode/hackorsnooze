@@ -7,12 +7,26 @@ const $body = $("body");
 const $storiesLoadingMsg = $("#stories-loading-msg");
 const $allStoriesList = $("#all-stories-list");
 
+const $allFavoritesList = $("#all-favorites-list");
+const $navFavorites = $("#nav-favorites");
+
+const $myStoriesList = $("#mystories-list")
+const $navMyStories = $("#nav-mystories");
+
 const $loginForm = $("#login-form");
 const $signupForm = $("#signup-form");
 
 const $navLogin = $("#nav-login");
 const $navUserProfile = $("#nav-user-profile");
 const $navLogOut = $("#nav-logout");
+const $navSubmit = $("#nav-submit");
+
+const $submitForm = $("#submit-form");
+const $submitButton = $("#submit-form button");
+const $submitAuthor = $("#create-author");
+const $submitTitle = $("#create-title");
+const $submitUrl = $("#create-url");
+
 
 /** To make it easier for individual components to show just themselves, this
  * is a useful function that hides pretty much everything on the page. After
@@ -24,6 +38,9 @@ function hidePageComponents() {
     $allStoriesList,
     $loginForm,
     $signupForm,
+    $allFavoritesList,
+    $submitForm,
+    $myStoriesList
   ];
   components.forEach(c => c.hide());
 }

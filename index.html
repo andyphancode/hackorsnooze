@@ -37,6 +37,15 @@
   <div class="navbar-brand">
     <a class="nav-link" href="#" id="nav-all">Hack or Snooze</a>
   </div>
+  <div class="main-nav-links hidden" id="navlinks">
+    |
+    <a class="nav-link" href="#" id="nav-submit">submit</a>
+    |
+    <a class="nav-link" href="#" id="nav-favorites">favorites</a>
+    |
+    <a class="nav-link" href="#" id="nav-mystories">my stories</a>
+    |
+  </div>
   <div class="nav-right">
     <a class="nav-link" href="#" id="nav-login">login/signup</a>
     <a class="nav-link" href="#" id="nav-user-profile"></a>
@@ -46,6 +55,26 @@
 
 <!-- area for stories (all stories, user stories, favorites) -->
 <section class="stories-container container">
+  
+  <!-- Submit story form -->
+  <section class="submit-story-form container">
+    <form action="#" id="submit-form" class="story-form hidden" method="post"> 
+      <div>
+        <label for="create-author">author</label>
+        <input type="text" required id="create-author" placeholder="author name">
+      </div>
+      <div>
+        <label for="create-title">title</label>
+        <input type="text" required id="create-title" placeholder="story title">
+      </div>
+      <div>
+        <label for="create-url">url</label>
+        <input type="text" required id="create-url" type="url" placeholder="http://storyurl">
+      </div>
+      <button type="submit">submit</button>
+      <hr>
+    </form>
+  </section>
 
   <!-- loading message (removed by JS after stories loaded) -->
   <div id="stories-loading-msg">Loading&hellip;</div>
@@ -53,6 +82,15 @@
   <!-- List of all stories -->
   <ol id="all-stories-list" class="stories-list"></ol>
 
+</section>
+
+<!-- Favorites list -->
+<section class="favorites-container container">
+  <ol id="all-favorites-list" class="stories-list"></ol>
+</section>
+<!-- My stories list -->
+<section class="mystories-container container">
+  <ol id="mystories-list" class="stories-list"></ol>
 </section>
 
 <!-- Login and signup forms -->
@@ -95,6 +133,8 @@
     <button type="submit">create account</button>
   </form>
 </section>
+
+
 
 <!-- Library JS & our JS -->
 <script src="https://unpkg.com/jquery"></script>

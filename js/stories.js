@@ -20,16 +20,23 @@ async function getAndShowStoriesOnStart() {
  */
 
 function generateStoryMarkup(story) {
-  // console.debug("generateStoryMarkup", story);
+  console.debug("generateStoryMarkup", story);
 
   const hostName = story.getHostName();
+
+  const starClass = currentUser.favorites.some(s => s.storyId === story.storyId) ? "fa fa-star" : "far fa-star";
+
   return $(`
+
       <li id="${story.storyId}">
+       
         <a href="${story.url}" target="a_blank" class="story-link">
           ${story.title}
         </a>
         <small class="story-hostname">(${hostName})</small>
+        
         <small class="story-author">by ${story.author}</small>
+        <span class="star"><i class='${starClass}'></i></span>
         <small class="story-user">posted by ${story.username}</small>
       </li>
     `);
@@ -50,3 +57,129 @@ function putStoriesOnPage() {
 
   $allStoriesList.show();
 }
+
+
+
+/** On submit button click, takes values from inputs on submit form and adds a story to the API */
+
+$submitButton.on('click', async function submitStory(evt){
+  evt.preventDefault();
+  console.debug("submitStory");
+  $submitForm.hide();
+  
+  const submittedStory = {
+    title: $submitTitle.val(),
+    author: $submitAuthor.val(),
+    url: $submitUrl.val(),
+  };
+
+  console.log(submittedStory);
+
+  await storyList.addStory(currentUser, submittedStory);
+
+  getAndShowStoriesOnStart();
+  $submitAuthor.val('');
+  $submitTitle.val('');
+  $submitUrl.val('');
+});
+
+
+
+/** Gets list of favorites from user and generates their HTML to put on page */
+
+function putFavoritesOnPage() {
+  console.debug("putFavoritesOnPage");
+
+  $allFavoritesList.empty();
+
+  for (let story of currentUser.favorites) {
+    const $favorite = generateStoryMarkup(story);
+    $allFavoritesList.append($favorite);  
+  }
+  
+  $allFavoritesList.show();
+}
+
+
+/**  add or remove favorites when a user clicks on a star next to a story
+ *  removes/adds to currentUser as well as updates API
+ */
+async function addOrRemoveFavorite() {
+  console.log($(this)[0].children[0].classList.value);
+  console.log($(this).parent()[0].id);
+
+  if($(this)[0].children[0].classList.value === "far fa-star") {
+    $(this)[0].children[0].classList.value = "fa fa-star"
+    const addResponse = await axios({
+      url: `${BASE_URL}/stories/${$(this).parent()[0].id}`,
+      method: "GET"
+    });
+    currentUser.addFavorite(addResponse.data.story);
+  } else {
+    $(this)[0].children[0].classList.value = "far fa-star"
+    const removeResponse = await axios({
+      url: `${BASE_URL}/stories/${$(this).parent()[0].id}`,
+      method: "GET"
+    });
+    currentUser.removeFavorite(removeResponse.data.story);
+  }
+}
+
+$allStoriesList.on('click', '.star', addOrRemoveFavorite);
+$allFavoritesList.on('click', '.star', addOrRemoveFavorite);
+
+/** Gets list of stories from user and generates their HTML to put on page */
+
+function generateMyStoriesMarkup(story) {
+  console.debug("generateStoryMarkup", story);
+
+  const hostName = story.getHostName();
+
+  return $(`
+
+      <li id="${story.storyId}">
+       
+        <a href="${story.url}" target="a_blank" class="story-link">
+          ${story.title}
+        </a>
+        <small class="story-hostname">(${hostName})</small>
+        
+        <small class="story-author">by ${story.author}</small>
+        <span class="delete"><b>X</b></span>
+        <small class="story-user">posted by ${story.username}</small>
+      </li>
+    `);
+}
+
+/** Display stories on page after generating markup */
+
+function putMyStoriesOnPage() {
+  console.debug("putMyStoriesOnPage");
+
+  $myStoriesList.empty()
+
+  for (let story of currentUser.ownStories) {
+    const $myStory = generateMyStoriesMarkup(story);
+    $myStoriesList.append($myStory);  
+  }
+  
+  $myStoriesList.show();
+}
+
+/** Delete story from my stories on currentUser and API, then reload page */
+
+async function deleteStory() {
+  console.debug("deleteStory");
+  console.log($(this).parent()[0].id);
+  const removeResponse = await axios({
+    url: `${BASE_URL}/stories/${$(this).parent()[0].id}`,
+    method: "DELETE",
+    params: {token: currentUser.loginToken}
+  })
+  currentUser.ownStories = currentUser.ownStories.filter(s => s.storyId !== $(this).parent()[0].id);
+  console.log(currentUser.ownStories);
+  await getAndShowStoriesOnStart();
+  navMyStoriesClick();
+}
+
+$($myStoriesList).on('click', '.delete', deleteStory);

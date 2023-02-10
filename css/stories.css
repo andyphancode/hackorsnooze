@@ -31,9 +31,23 @@
 }
 
 .story-author {
-  margin-left: 2em;
+  margin-left: 0;
 }
 
 .story-user {
   display: block;
+}
+
+.submit-story-form {
+  width: 100%;
+}
+
+.story-hostname {
+  margin-right: 0;
+}
+
+.delete {
+  border: solid black 1px;
+  padding-right: 5px;
+  padding-left: 5px;
 }

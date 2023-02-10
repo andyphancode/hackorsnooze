@@ -24,8 +24,9 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-    // UNIMPLEMENTED: complete this function!
-    return "hostname.com";
+    const newUrl = new URL(this.url);
+    
+    return newUrl.hostname;
   }
 }
 
@@ -73,9 +74,19 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory( /* user, newStory */) {
-    // UNIMPLEMENTED: complete this function!
+  async addStory(user, newStory) {
+    console.debug("addStory");
+    const {title, author, url} = newStory;
+    const response = await axios.post(`${BASE_URL}/stories`,{
+      'token': user.loginToken,
+      'story': {author, title, url}
+    })
+    console.log(response);
+    let newStoryInstance = new Story(response.data.story);
+    user.ownStories.push(newStoryInstance);
+    return newStoryInstance;
   }
+
 }
 
 
@@ -178,6 +189,7 @@ class User {
 
       let { user } = response.data;
 
+
       return new User(
         {
           username: user.username,
@@ -193,4 +205,39 @@ class User {
       return null;
     }
   }
+
+
+  /** Add a story instance into user's favorite list
+   *  and update API
+   */
+
+  async addFavorite (story) {
+    console.debug("addFavorite");
+    this.favorites.push(new Story(story));
+    const token = this.loginToken;
+    const response = await axios({
+      url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
+      method: "POST",
+      data: { token },
+    });
+    console.log(response);
+  }
+
+  /** Remove a story instance from user's favorite list
+   *  and update API
+   */
+
+  async removeFavorite (story) {
+    console.debug("removeFavorite");
+    currentUser.favorites = this.favorites.filter(s => s.storyId !== story.storyId);
+    const token = this.loginToken;
+    const response = await axios({
+      url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
+      method: "DELETE",
+      data: { token },
+    });
+    console.log(response);
+  }
+  
 }
+
