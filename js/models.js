@@ -81,7 +81,6 @@ class StoryList {
       'token': user.loginToken,
       'story': {author, title, url}
     })
-    console.log(response);
     let newStoryInstance = new Story(response.data.story);
     user.ownStories.push(newStoryInstance);
     return newStoryInstance;
@@ -220,7 +219,6 @@ class User {
       method: "POST",
       data: { token },
     });
-    console.log(response);
   }
 
   /** Remove a story instance from user's favorite list
@@ -236,7 +234,6 @@ class User {
       method: "DELETE",
       data: { token },
     });
-    console.log(response);
   }
   
 }

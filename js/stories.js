@@ -73,7 +73,7 @@ $submitButton.on('click', async function submitStory(evt){
     url: $submitUrl.val(),
   };
 
-  console.log(submittedStory);
+
 
   await storyList.addStory(currentUser, submittedStory);
 
@@ -105,8 +105,7 @@ function putFavoritesOnPage() {
  *  removes/adds to currentUser as well as updates API
  */
 async function addOrRemoveFavorite() {
-  console.log($(this)[0].children[0].classList.value);
-  console.log($(this).parent()[0].id);
+  
 
   if($(this)[0].children[0].classList.value === "far fa-star") {
     $(this)[0].children[0].classList.value = "fa fa-star"
@@ -170,14 +169,12 @@ function putMyStoriesOnPage() {
 
 async function deleteStory() {
   console.debug("deleteStory");
-  console.log($(this).parent()[0].id);
   const removeResponse = await axios({
     url: `${BASE_URL}/stories/${$(this).parent()[0].id}`,
     method: "DELETE",
     params: {token: currentUser.loginToken}
   })
   currentUser.ownStories = currentUser.ownStories.filter(s => s.storyId !== $(this).parent()[0].id);
-  console.log(currentUser.ownStories);
   await getAndShowStoriesOnStart();
   navMyStoriesClick();
 }
