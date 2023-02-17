@@ -4,6 +4,8 @@
 
 const $body = $("body");
 
+const $navLinks = $("#navlinks")
+
 const $storiesLoadingMsg = $("#stories-loading-msg");
 const $allStoriesList = $("#all-stories-list");
 
@@ -49,7 +51,7 @@ function hidePageComponents() {
 
 async function start() {
   console.debug("start");
-
+  $navLinks.hide();
   // "Remember logged-in user" and log in, if credentials in localStorage
   await checkForRememberedUser();
   await getAndShowStoriesOnStart();

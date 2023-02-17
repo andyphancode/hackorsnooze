@@ -23,8 +23,14 @@ function generateStoryMarkup(story) {
   console.debug("generateStoryMarkup", story);
 
   const hostName = story.getHostName();
+  let starClass = "";
 
-  const starClass = currentUser.favorites.some(s => s.storyId === story.storyId) ? "fa fa-star" : "far fa-star";
+  if (currentUser) {
+    starClass = currentUser.favorites.some(s => s.storyId === story.storyId) ? "fa fa-star" : "far fa-star";
+  } else {
+    starClass = ""
+  }
+  
 
   return $(`
 
