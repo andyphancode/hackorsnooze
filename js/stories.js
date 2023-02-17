@@ -106,22 +106,18 @@ function putFavoritesOnPage() {
  */
 async function addOrRemoveFavorite() {
   
-
+  const response = await axios({
+    url: `${BASE_URL}/stories/${$(this).parent()[0].id}`,
+    method: "GET"
+  });
   if($(this)[0].children[0].classList.value === "far fa-star") {
     $(this)[0].children[0].classList.value = "fa fa-star"
-    const addResponse = await axios({
-      url: `${BASE_URL}/stories/${$(this).parent()[0].id}`,
-      method: "GET"
-    });
-    currentUser.addFavorite(addResponse.data.story);
+    currentUser.addFavorite(response.data.story);
   } else {
     $(this)[0].children[0].classList.value = "far fa-star"
-    const removeResponse = await axios({
-      url: `${BASE_URL}/stories/${$(this).parent()[0].id}`,
-      method: "GET"
-    });
-    currentUser.removeFavorite(removeResponse.data.story);
+    currentUser.removeFavorite(response.data.story);
   }
+
 }
 
 $allStoriesList.on('click', '.star', addOrRemoveFavorite);
